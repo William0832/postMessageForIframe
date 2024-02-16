@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>子頁面</title>
+<style>
+  #box {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+  }
+</style>
+</head>
+<body>
+
+<h1>子頁面 iframe</h1>
+<div id="box"></div>
+<button id="like-btn">like</button>
+<script>
+const source = 'http://127.0.0.1:5500'
+const likeBtn = document.getElementById('like-btn')
+
+function setBoxColor(color) {
+  document.getElementById('box').style.backgroundColor = color
+}
+function setToggleLike () {
+  const isLike = likeBtn.innerText === 'like'
+  if(isLike) {
+    likeBtn.innerText ='unlike'
+  } else {
+    likeBtn.innerText = 'like'
+  }
+  return isLike
+}
+likeBtn.addEventListener('click', function (e) {
+  const likeRes = setToggleLike()
+  window.parent.postMessage({like: likeRes}, source)
+})
+// 監聽來自父頁面的訊息
+window.addEventListener('message', function(e) {
+    // 檢查來源以確保安全
+    if (e.origin === "http://127.0.0.1:5500") {
+      const { color } =e.data
+      if(!color) return
+      console.log('child-received',{color})
+      setBoxColor(color)
+      // 回應父頁面
+      e.source.postMessage({done: true, message: color}, e.origin);
+    }
+});
+</script>
+
+</body>
+</html>

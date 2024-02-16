@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>父頁面</title>
+<style>
+  .btns {
+    display: flex;
+    gap: 10px;
+    margin: 1rem;
+  }
+  .btn {
+    padding: 10px 20px;
+    color: white;
+  }
+  .btn-red {
+    background-color: red;
+  }
+  .btn-blue {
+    background-color: blue;
+  }
+  .btn-orange {
+    background-color: orange;
+  }
+  .text-not {
+    color: red;
+    padding-inline: 0 .4rem;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<h1>父頁面</h1>
+<p>傳遞顏色到子iframe</p>
+<div class="btns">
+  <button class="btn btn-red" data-color="red">red</button>
+  <button class="btn btn-blue" data-color="blue">blue</button>
+  <button class="btn btn-orange" data-color="orange">orange</button>
+</div>
+<div>Is Papa <span class="text-not">not</span>Like
+</div>
+<iframe id="childFrame" src="child.html" style="width: 600px; height: 400px;"></iframe>
+
+<script>
+// 等待 iframe 加載完成
+const source = 'http://127.0.0.1:5500'
+function setPoPLike(isLike) {
+  const textNot = document.querySelector('.text-not')
+  if(!isLike) textNot.style.display = 'none'
+  else textNot.style.display = 'inline-block'
+
+}
+window.onload = function() {
+    const childFrame = document.getElementById('childFrame').contentWindow;
+    document.querySelector('.btns').addEventListener('click', (e) => {
+      if(e.target.tagName === 'BUTTON') {
+        const {color} = e.target.dataset
+        // 向子頁面發送訊息
+        childFrame.postMessage({color}, source);
+      }
+    })
+    window.addEventListener('message', function(e) {
+        // 檢查來源以確保安全
+        if (e.origin === source) {
+            const {done, message, like} = e.data
+            if(done) {
+              console.log('parent-received', {message})
+              return
+            }
+            if(like != null) {
+              console.log('parent-received', {like})
+              setPoPLike(like)
+              return
+            }
+        }
+    }, false);
+};
+</script>
+
+</body>
+</html>
