@@ -40,7 +40,7 @@ likeBtn.addEventListener('click', function (e) {
 // 監聽來自父頁面的訊息
 window.addEventListener('message', function(e) {
     // 檢查來源以確保安全
-    if (e.origin === "http://127.0.0.1:5500") {
+    if (e.origin === source) {
       const { color } =e.data
       if(!color) return
       console.log('child-received',{color})
