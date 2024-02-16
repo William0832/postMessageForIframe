@@ -41,9 +41,10 @@
 </div>
 <iframe id="childFrame" src="child.html" style="width: 600px; height: 400px;"></iframe>
 
-<script>
+<script type="module">
 // 等待 iframe 加載完成
-const source = 'http://127.0.0.1:5500'
+// const source = 'http://127.0.0.1:5500'
+import { source } from './index.js'
 function setPoPLike(isLike) {
   const textNot = document.querySelector('.text-not')
   if(!isLike) textNot.style.display = 'none'

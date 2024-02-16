@@ -16,8 +16,9 @@
 <h1>子頁面 iframe</h1>
 <div id="box"></div>
 <button id="like-btn">like</button>
-<script>
-const source = 'http://127.0.0.1:5500'
+<script type="module">
+// const source = 'http://127.0.0.1:5500'
+import { source } from './index.js'
 const likeBtn = document.getElementById('like-btn')
 
 function setBoxColor(color) {
